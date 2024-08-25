@@ -1,0 +1,40 @@
+2024-06-17 02:54:39.342121+03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "create table project (id integer not null, date_creation timestamp(6), name varchar(255), privacy varchar(255), [*]user varbinary(255), primary key (id))"; ожидалось "identifier"
+Syntax error in SQL statement "create table project (id integer not null, date_creation timestamp(6), name varchar(255), privacy varchar(255), [*]user varbinary(255), primary key (id))"; expected "identifier"; SQL statement:
+create table project (id integer not null, date_creation timestamp(6), name varchar(255), privacy varchar(255), user varbinary(255), primary key (id)) [42001-224]
+2024-06-17 02:54:39.357134+03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "PROJECT" не найдена
+Table "PROJECT" not found; SQL statement:
+alter table if exists list add constraint FKpaeuh33nl234mt38n47q1jc8g foreign key (project_id) references project [42102-224]
+2024-06-17 02:54:46.875234+03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "select p1_0.id,p1_0.date_creation,p1_0.name,p1_0.privacy,p1_0.[*]user from project p1_0"; ожидалось "identifier"
+Syntax error in SQL statement "select p1_0.id,p1_0.date_creation,p1_0.name,p1_0.privacy,p1_0.[*]user from project p1_0"; expected "identifier"; SQL statement:
+select p1_0.id,p1_0.date_creation,p1_0.name,p1_0.privacy,p1_0.user from project p1_0 [42001-224]
+2024-06-17 02:57:05.464289+03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "create table project (id integer not null, date_creation timestamp(6), name varchar(255), privacy varchar(255), [*]user varbinary(255), primary key (id))"; ожидалось "identifier"
+Syntax error in SQL statement "create table project (id integer not null, date_creation timestamp(6), name varchar(255), privacy varchar(255), [*]user varbinary(255), primary key (id))"; expected "identifier"; SQL statement:
+create table project (id integer not null, date_creation timestamp(6), name varchar(255), privacy varchar(255), user varbinary(255), primary key (id)) [42001-224]
+2024-06-17 02:57:05.470295+03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "PROJECT" не найдена
+Table "PROJECT" not found; SQL statement:
+alter table if exists list add constraint FKpaeuh33nl234mt38n47q1jc8g foreign key (project_id) references project [42102-224]
+2024-06-17 02:59:49.152810+03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "create table project (id integer not null, date_creation timestamp(6), name varchar(255), privacy varchar(255), [*]user varbinary(255), primary key (id))"; ожидалось "identifier"
+Syntax error in SQL statement "create table project (id integer not null, date_creation timestamp(6), name varchar(255), privacy varchar(255), [*]user varbinary(255), primary key (id))"; expected "identifier"; SQL statement:
+create table project (id integer not null, date_creation timestamp(6), name varchar(255), privacy varchar(255), user varbinary(255), primary key (id)) [42001-224]
+2024-06-17 02:59:49.158817+03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "PROJECT" не найдена
+Table "PROJECT" not found; SQL statement:
+alter table if exists list add constraint FKpaeuh33nl234mt38n47q1jc8g foreign key (project_id) references project [42102-224]
+2024-06-17 02:59:59.983310+03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "create table project (id integer not null, date_creation timestamp(6), name varchar(255), privacy varchar(255), [*]user varbinary(255), primary key (id))"; ожидалось "identifier"
+Syntax error in SQL statement "create table project (id integer not null, date_creation timestamp(6), name varchar(255), privacy varchar(255), [*]user varbinary(255), primary key (id))"; expected "identifier"; SQL statement:
+create table project (id integer not null, date_creation timestamp(6), name varchar(255), privacy varchar(255), user varbinary(255), primary key (id)) [42001-224]
+2024-06-17 02:59:59.989315+03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "PROJECT" не найдена
+Table "PROJECT" not found; SQL statement:
+alter table if exists list add constraint FKpaeuh33nl234mt38n47q1jc8g foreign key (project_id) references project [42102-224]
+2024-06-17 03:00:20.105740+03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "select p1_0.id,p1_0.date_creation,p1_0.name,p1_0.privacy,p1_0.[*]user from project p1_0"; ожидалось "identifier"
+Syntax error in SQL statement "select p1_0.id,p1_0.date_creation,p1_0.name,p1_0.privacy,p1_0.[*]user from project p1_0"; expected "identifier"; SQL statement:
+select p1_0.id,p1_0.date_creation,p1_0.name,p1_0.privacy,p1_0.user from project p1_0 [42001-224]

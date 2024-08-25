@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+           font-family: Arial, sans-serif;
+           margin: 0;
+           padding: 0;
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+        }
+
+     .header {
+           width: 100%;
+           background-color: #74b9ff;
+           display: flex;
+           justify-content: space-around;
+           align-items: center;
+        }
+
+     .logo {
+           font-size: 3em;
+        }
+
+     .nav {
+           display: flex;
+           gap: 20px;
+        }
+
+     .nav-item {
+           font-size: 2em;
+        }
+
+     .user-icon {
+           width: 50px;
+           height: 50px;
+           background-color: #74b9ff;
+           border-radius: 50%;
+        }
+
+     .content {
+           width: 80%;
+           display: flex;
+           justify-content: space-around;
+           margin-top: 50px;
+        }
+
+     .column {
+           width: 30%;
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           border-right: 1px solid black;
+           padding-right: 10px;
+           cursor: move;
+           position: relative;
+        }
+
+     .column:last-child {
+           border-right: none;
+        }
+
+     .column[data-list-id] {
+           --list-id: attr(data-list-id);
+        }
+
+     .column-title {
+           font-size: 1.5em;
+           margin-bottom: 20px;
+        }
+
+     .post {
+           width: 100%;
+           height: 50px;
+           background-color: #dcdcdc;
+           margin-bottom: 10px;
+           padding: 10px;
+           cursor: move;
+           position: relative;
+        }
+
+     .user-info {
+           width: 100%;
+           height: 50px;
+           background-color: #74b9ff;
+           margin-bottom: 10px;
+           padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="logo">Mello</div>
+    <div class="nav">
+        <div class="nav-item">Удзінні</div>
+        <div class="nav-item">Настрайки</div>
+        <div class="nav-item">Настройки</div>
+    </div>
+    <div class="user-icon">
+        <div class="user-info">Кольону</div>
+    </div>
+</div>
+<div class="content">
+    <div class="column" data-list-id="1">
+        <div class="column-title">ТоDo</div>
+        <div class="post" id="post1" draggable="true" ondragstart="drag(event)">Следвайте будь</div>
+        <div class="post" id="post2" draggable="true" ondragstart="drag(event)">Добвить здачу</div>
+    </div>
+    <div class="column" data-list-id="2">
+        <div class="column-title">Провесse</div>
+        <div class="post" id="post3" draggable="true" ondragstart="drag(event)">Следвайте макет в філе</div>
+        <div class="post" id="post4" draggable="true" ondragstart="drag(event)">Добавить здачу</div>
+    </div>
+    <div class="column" data-list-id="3">
+        <div class="column-title">Добавить</div>
+        <div class="post" id="post5" draggable="true" ondragstart="drag(event)">Добавить здачу</div>
+        <div class="post" id="post6" draggable="true" ondragstart="drag(event)">Плюс</div>
+    </div>
+</div>
+
+<script>
+    function allowDrop(ev) {
+        ev.preventDefault(); // Прекращаем предотвращение действия по умолчанию
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text/plain", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        var targetColumn = ev.target.closest(".column");
+        var draggedElementId = ev.dataTransfer.getData("text/plain");
+        var draggedElement = document.getElementById(draggedElementId);
+
+        // Проверяем, является ли целью колонка
+        if (targetColumn) {
+            var newListId = targetColumn.getAttribute('data-list-id');
+
+            // Конвертируем ID поста в фактический объект списка
+            var newList = convertPostIdToList(newListId);
+
+            // Отправляем ID перемещенного задания на сервер вместе с новым списком
+            fetch('/api/lists/' + newListId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({newListId: newList})
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                console.log('Задание успешно перемещено');
+            })
+            .catch(error => {
+                console.error('Произошла ошибка при операции fetch:', error);
+            });
+
+            // Удаляем элемент из его исходного столбца
+            draggedElement.parentNode.removeChild(draggedElement);
+
+            // Добавляем элемент в целевой столбец
+            targetColumn.appendChild(draggedElement);
+        }
+    }
+
+    // Функция-пустышка, реализуйте логическую конвертацию
+    function convertPostIdToList(postId) {
+        // Логика преобразования postId в фактический объект списка
+        return null;
+    }
+
+    // Применяем слушатели событий ко всем элементам .post
+    document.querySelectorAll('.post').forEach(function(element) {
+        element.addEventListener('dragstart', function(e) { drag(e); });
+        element.addEventListener('dragover', function(e) { allowDrop(e); }); // Разрешаем перетаскивание
+        element.addEventListener('drop', function(e) { drop(e); });
+    });
+</script>
+</body>
+</html>

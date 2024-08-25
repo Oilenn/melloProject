@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}"></title>
+    <style>
+        body {
+           font-family: Arial, sans-serif;
+           margin: 0;
+           padding: 0;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           height: 100vh;
+        }
+
+        header {
+           position: fixed;
+           top: 0;
+           width: 100%;
+           background-color: #66b3ff;
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           padding: 0 20px;
+        }
+
+        #logo {
+           font-size: 3em;
+           color: #fff;
+        }
+
+        #nav {
+           font-size: 1.5em;
+           color: #fff;
+        }
+
+        #content {
+           margin-top: 80px;
+           display: flex;
+           justify-content: space-around;
+           align-items: center;
+           height: calc(100vh - 80px);
+        }
+
+        #menu-column {
+            width: 20%;
+            font-size: 1.5em;
+            line-height: 1.5em;
+            border-left: 2px solid #000;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-right: 10%;
+        }
+
+        #menu-column button{
+            width: 80%;
+            height: 50px;
+            font-size: 1.5em;
+            margin-top: 20%;
+            margin-bottom: 20%;
+            background-color: #AFFFFA;
+            border-width: 0;
+        }
+
+        #activity-wrapper{
+            width: 70%;
+        }
+
+        #activity-column {
+           margin-left: 20%;
+           font-size: 1.5em;
+           line-height: 1.5em;
+           border-left: 2px solid #000;
+        }
+
+        #activity-column p {
+           background-color: #AFFFFA;
+           width: 70%;
+           margin-bottom: 5%;
+        }
+
+       .project {
+           display: flex;
+           margin: 20px 0;
+        }
+
+       .project-image {
+           width: 50px;
+           height: 50px;
+           background-color: #ddd;
+           margin-right: 10px;
+        }
+
+        /* Скрытие проектов по умолчанию */
+        #project1, #project2, #project3 {
+           display: none;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div id="logo">Mello</div>
+</header>
+<div id="content">
+    <div id="menu-column">
+        <button>Проекты</button>
+        <button>Шаблоны</button>
+        <button>Архив</button>
+        <button>Избранное</button>
+    </div>
+    <div>
+        <div id="activity-column">
+            <h1 style="margin-left: 25%; font-size: 1.5em;">Активность</h1>
+            <p>Плюсвалеты пользователей 123 в простей проекты поставляй закуды "Культы ком" в "Выполненные"</p>
+            <p>Пользователи пользователь 123 в простей проекты поставляй задуды "Культы ком" в "Выполненные"</p>
+            <p>Пользователи пользователь 123 в простей проекты поставляй задуду "Культы ком" в "Выполненные"</p>
+        </div>
+    </div>
+    <div id="projects">
+        <div>
+            Недавно просмотреное
+        </div>
+        <div class="project" th:each="project : ${projects}">
+            <p class="project-image" th:text="${project.name}"></p>
+        </div>
+    </div>
+</div>
+<script>
+    document.querySelectorAll('#menu-column button').forEach(button => {
+    button.addEventListener('click', function(event) {
+        // Предотвращаем стандартное поведение отправки формы
+        event.preventDefault();
+
+        // Получаем текст кнопки и преобразуем его в нижний регистр и удаляем пробелы
+        const projectId = event.target.textContent.toLowerCase().replace(/\s+/g, '');
+
+        // Переходим по URL, соответствующему проекту
+        window.location.href = `/projects`;
+    });
+});
+</script>
+</body>
+</html>
