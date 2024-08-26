@@ -16,7 +16,7 @@ import java.util.Date;
 public class Task implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer Id;
+    private Long Id;
     @ManyToOne
     private List list;
     private String name;

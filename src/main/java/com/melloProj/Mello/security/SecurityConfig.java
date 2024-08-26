@@ -25,7 +25,7 @@ public class SecurityConfig{
         UserDetails user = User.builder()
                 .username("1")
                 .password(encoder.encode("1"))
-                .roles("USER")
+                .roles("ADMIN")
                 .build();
         return new InMemoryUserDetailsManager(user);
     }
@@ -33,7 +33,7 @@ public class SecurityConfig{
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable).
                 authorizeHttpRequests(auth -> auth.requestMatchers("/").permitAll()
-                        .requestMatchers("/").authenticated())
+                        )
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .build();
     }

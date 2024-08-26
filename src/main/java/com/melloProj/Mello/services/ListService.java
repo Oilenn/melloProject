@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
 @Service
 public class ListService {
     private final ListRepository listRepository;
@@ -28,7 +30,7 @@ public class ListService {
         return taskMap;
     }
 
-    public void updateTaskList(Integer taskId, List newList) {
+    public void updateTaskList(Long taskId, List newList) {
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new RuntimeException("Task not found"));
         task.setList(newList);
         taskRepository.save(task);

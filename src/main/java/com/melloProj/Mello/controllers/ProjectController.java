@@ -1,28 +1,61 @@
 package com.melloProj.Mello.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.melloProj.Mello.models.List;
 import com.melloProj.Mello.models.Project;
-import com.melloProj.Mello.repositories.ProjectRepository;
+import com.melloProj.Mello.models.Task;
+import com.melloProj.Mello.services.ListService;
+import com.melloProj.Mello.services.ProjectService;
+import com.melloProj.Mello.services.TaskService;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.Map;
+
+@RestController("projects")
 public class ProjectController {
     @Autowired
-    ProjectRepository projectRepository;
+    ProjectService projectService;
 
-    @GetMapping("/project/{projectId}")
-    public String showProjectPage(@PathVariable Integer projectId, Model model) {
-        System.out.println("Received projectId: " + projectId);
-        Project project = projectRepository.findById(projectId).get(); // Используйте сервис для получения проекта по ID
-        if (project == null) {
-            throw new RuntimeException("Project not found");
-        }
+    @Autowired
+    TaskService taskService;
 
-        model.addAttribute("project", project);
-        return "project";
+    @Autowired
+    ListService listService;
+
+    @SneakyThrows
+    @CrossOrigin
+    @GetMapping("project/{id}")
+    public ResponseEntity<String> getProject(@PathVariable Integer id) {
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(projectService.getProject(id)));
+    }
+    @SneakyThrows
+    @CrossOrigin
+    @PostMapping("project")
+    public ResponseEntity<String> postProject(@RequestBody Project project) {
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(projectService.createProject(project)));
+    }
+    @SneakyThrows
+    @CrossOrigin
+    @DeleteMapping("project")
+    public ResponseEntity<String> deleteProject(@RequestBody Project project) {
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(projectService.createProject(project)));
     }
 
+
+    @SneakyThrows
+    @CrossOrigin
+    @PostMapping("task/{listId}/{id}")
+    public ResponseEntity<String> getTask(@PathVariable Long taskId, @PathVariable Long listId){
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(taskService.getById(taskId)));
+    }
+    @SneakyThrows
+    @CrossOrigin
+    @PostMapping("task")
+    public ResponseEntity<String> postTask(@RequestBody Task task){
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(taskService.createTask(task)));
+    }
 }

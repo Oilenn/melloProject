@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@RestController
-@RequestMapping("/api/lists")
+
+//Контроллер для взаимодействия с листами
+@RestController("lists")
 public class ListController {
 
     private final ListService listService;
@@ -28,7 +29,7 @@ public class ListController {
 
     @PostMapping("/{listId}/tasks/{taskId}")
     public ResponseEntity<Void> moveTask(@PathVariable List listId,
-                                         @PathVariable Integer taskId,
+                                         @PathVariable Long taskId,
                                          @RequestBody List newList) {
         listService.updateTaskList(taskId, newList);
         return ResponseEntity.ok().build();
