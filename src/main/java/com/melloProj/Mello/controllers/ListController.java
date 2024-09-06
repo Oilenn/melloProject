@@ -1,37 +1,29 @@
 package com.melloProj.Mello.controllers;
 
-import com.melloProj.Mello.models.List;
-import com.melloProj.Mello.models.Task;
-import com.melloProj.Mello.services.ListService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 
 //Контроллер для взаимодействия с листами
 @RestController("lists")
 public class ListController {
-
-    private final ListService listService;
-
-    @Autowired
-    public ListController(ListService listService) {
-        this.listService = listService;
-    }
-
-    @GetMapping("/{listId}/tasks")
-    public ResponseEntity<Map<Integer, Task>> getTasksByList(@PathVariable List list) {
-        Map<Integer, Task> tasks = listService.getTasksByList(list);
-        return ResponseEntity.ok(tasks);
-    }
-
-    @PostMapping("/{listId}/tasks/{taskId}")
-    public ResponseEntity<Void> moveTask(@PathVariable List listId,
-                                         @PathVariable Long taskId,
-                                         @RequestBody List newList) {
-        listService.updateTaskList(taskId, newList);
-        return ResponseEntity.ok().build();
-    }
+//    @Autowired
+//    private ListService listService;
+//
+//    @SneakyThrows
+//    @GetMapping("/{listId}/tasks")
+//    @Operation(summary = "Получить задачи по списку")
+//    public ResponseEntity<String> getTasksByList(@PathVariable List list) {
+//        java.util.List<Task> tasks = listService.getTasksByList(list);
+//        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(listService.getTasksByList(list)));
+//    }
+//
+//    @SneakyThrows
+//    @PostMapping("/{listId}/tasks/{taskId}")
+//    @Operation(summary = "Переместить задачу в новый список")
+//    public ResponseEntity<Void> moveTask(@PathVariable List listId,
+//                                         @PathVariable Long taskId,
+//                                         @RequestBody List newList) {
+//        listService.updateTaskList(taskId, newList);
+//        return ResponseEntity.ok().build();
+//    }
 }

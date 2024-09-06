@@ -1,8 +1,8 @@
-package com.melloProj.Mello.services;
+package com.melloProj.Mello.services.project;
 
-import com.melloProj.Mello.models.Task;
-import com.melloProj.Mello.repositories.ListRepository;
-import com.melloProj.Mello.repositories.TaskRepository;
+import com.melloProj.Mello.models.project.Task;
+import com.melloProj.Mello.repositories.project.ListRepository;
+import com.melloProj.Mello.repositories.project.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,15 +22,13 @@ public class TaskService {
         return taskRepository.findById(id).orElse(null);
     }
 
-    public Task getByListId(Long id){
-        return taskRepository.findByList(listRepository.findById(id).orElse(null));
-    }
-
-    public void deleteTask(Long id){
+    public Task deleteTask(Long id){
         Task task = taskRepository.findById(id).orElse(null);;
 
         if(task != null){
             taskRepository.delete(task);
         }
+
+        return task;
     }
 }

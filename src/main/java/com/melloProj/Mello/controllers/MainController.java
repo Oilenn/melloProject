@@ -1,23 +1,24 @@
 package com.melloProj.Mello.controllers;
 
-import com.melloProj.Mello.models.List;
-import com.melloProj.Mello.models.MelloUser;
-import com.melloProj.Mello.models.Project;
-import com.melloProj.Mello.repositories.ListRepository;
-import com.melloProj.Mello.repositories.ProjectRepository;
-import com.melloProj.Mello.repositories.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.melloProj.Mello.models.project.List;
+import com.melloProj.Mello.models.user.MelloUser;
+import com.melloProj.Mello.models.project.Project;
+import com.melloProj.Mello.repositories.project.ListRepository;
+import com.melloProj.Mello.repositories.project.ProjectRepository;
+import com.melloProj.Mello.repositories.system.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 
-@Controller
+@RestController("main")
 public class MainController {
     @Autowired
     private ListRepository listRepository;
@@ -34,8 +35,8 @@ public class MainController {
         entityManager.createNativeQuery("DROP TABLE IF EXISTS project").executeUpdate();
     }
 
-    @GetMapping("/")
-    public String home(Model model) {
+    @PostMapping("/")
+    public ResponseEntity<String> home(Model model) throws JsonProcessingException {
         MelloUser user = new MelloUser();
         user.setLogin("1");
         user.setMail("ds");
@@ -48,18 +49,23 @@ public class MainController {
         Project project = new Project();
         project.setName("Проект");
         project.setDateCreation(new Date());
-        project.setPrivacy("Закрытый");
-        project.setUser(user);
+        project.setTheme("Закрытый");
+        project.setMelloUsers(user.getId());
+
+        System.out.println(project.getId());
 
         projectRepository.save(project);
 
         List list = new List();
         list.setName("Задача");
-        list.setProject(project);
+        list.setListProjectCon(project.getId());
         listRepository.save(list);
 
         Iterable<Project> projects = projectRepository.findAll(); // Получаем все проекты
         model.addAttribute("projects", projects); // Добавляем их в модель
-        return "home"; // Имя вашего шаблона Thymeleaf
+
+        System.out.println(project.getId());
+
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(project));
     }
 }

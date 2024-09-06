@@ -1,4 +1,4 @@
-package com.melloProj.Mello.models;
+package com.melloProj.Mello.models.project;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,17 +14,15 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Commentary implements Serializable {
+public class Project implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-//    @ManyToOne
-    private MelloUser participant;
-    private String text;
-    private Date date;
-    private Task task;
-    //Код(Pk)
-    //Участник(Fk)
-    //Текст
-    //Дата
+    private Long id;
+    private String name;
+
+    private Long melloUsers;
+    private Date dateCreation;
+    private String theme;
+    private Boolean template;
+    private Long image;
 }

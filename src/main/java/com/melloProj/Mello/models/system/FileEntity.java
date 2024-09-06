@@ -1,4 +1,4 @@
-package com.melloProj.Mello.models;
+package com.melloProj.Mello.models.system;
 
 import jakarta.persistence.*;
 import lombok.Data;

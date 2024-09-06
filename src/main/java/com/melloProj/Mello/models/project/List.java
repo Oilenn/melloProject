@@ -1,4 +1,4 @@
-package com.melloProj.Mello.models;
+package com.melloProj.Mello.models.project;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,8 +16,10 @@ import java.io.Serializable;
 public class List implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-    @ManyToOne
-    private Project project;
+    private Long id;
+    private Long listProjectCon;
     private String name;
+
+    private Long next;
+    private Long prev;
 }

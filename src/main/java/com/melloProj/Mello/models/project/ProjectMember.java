@@ -1,7 +1,7 @@
-package com.melloProj.Mello.models;
+package com.melloProj.Mello.models.project;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+        import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,13 +13,12 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Task implements Serializable {
-    @Id
+public class ProjectMember implements Serializable {
+    @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
-    @ManyToOne
-    private List list;
-    private String name;
-    private String text;
-    private Date deadline;
+    private Long userProject;
+    private String role;
+    private Boolean isAdmin;
 }
+

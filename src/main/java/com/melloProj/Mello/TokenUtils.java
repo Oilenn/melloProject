@@ -1,10 +1,10 @@
 package com.melloProj.Mello;
 
 
-import com.melloProj.Mello.models.MelloUser;
-import com.melloProj.Mello.models.Token;
-import com.melloProj.Mello.repositories.TokenRepo;
-import com.melloProj.Mello.repositories.UserRepository;
+import com.melloProj.Mello.models.user.MelloUser;
+import com.melloProj.Mello.models.user.Token;
+import com.melloProj.Mello.repositories.system.TokenRepository;
+import com.melloProj.Mello.repositories.system.UserRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -18,34 +18,35 @@ import java.util.List;
 
 @Component
 public class TokenUtils {
-    private final TokenRepo tokenRepo;
+    private final TokenRepository tokenRepository;
     private final Integer dataOffset;
     private final SecureRandom secureRand;
     private final UserRepository userRepository;
 
     @Autowired
-    public TokenUtils(TokenRepo tokenRepo, Environment env, UserRepository userRepository){
-        this.tokenRepo = tokenRepo;
+    public TokenUtils(TokenRepository tokenRepository, Environment env, UserRepository userRepository){
+        this.tokenRepository = tokenRepository;
         dataOffset = Integer.parseInt(env.getProperty("app.scramble.dataOffset", "0"));
         secureRand = new SecureRandom(env.getProperty("app.scramble.seed", "7489509037124").getBytes(StandardCharsets.UTF_8));
         this.userRepository = userRepository;
     }
     
     public Token createToken(MelloUser user){
-        Token res = new Token(); 
+        Token res = new Token();
 
         res.setExpTime(OffsetDateTime.now().plusDays(dataOffset));
-        res.setProfile(user.getId());
+        res.setMelloUser(user.getId());
 
         List<String> parts = generatePayload(user);
-        res.setPublicPart(parts.get(0));
-        res.setPrivatePart(parts.get(1));
-        return tokenRepo.save(res);
+        res.setToken(String.valueOf(parts));
+        System.out.println(res.getToken());
+        return tokenRepository.save(res);
     }
 
     public Boolean verifyToken(String tokenPart){
         Token currToken = findToken(tokenPart);
-        
+        System.out.println(tokenPart);
+
         if(currToken.getExpTime().isBefore(OffsetDateTime.now())) {
             deleteToken(currToken);
             return false;
@@ -57,23 +58,22 @@ public class TokenUtils {
 
     public MelloUser getProfileByToken(Token token){
         if(token == null) return null;
-        return userRepository.findById(token.getProfile()).orElse(null);
+        return userRepository.findById(token.getMelloUser()).orElse(null);
     }
 
     public void extendTokenLifetime(Token token){
         token.setExpTime(OffsetDateTime.now().plusDays(dataOffset));
-        tokenRepo.save(token);
+        tokenRepository.save(token);
     }
 
     public Token findToken(String tokenPart){
-        List<Token> currToken = tokenRepo.findByPublicPart(tokenPart);
-        if(currToken.isEmpty()) currToken = tokenRepo.findByPrivatePart(tokenPart);
+        List<Token> currToken = tokenRepository.findByToken(tokenPart);
         if(currToken.isEmpty()) return null;
         return currToken.get(0);
     }
 
     public void deleteToken(Token token){
-        tokenRepo.delete(token);
+        tokenRepository.delete(token);
     }
     
     private List<String> generatePayload(MelloUser profile){
@@ -81,18 +81,10 @@ public class TokenUtils {
         List<String> res = new ArrayList<>();
 
         String publicPart = profile.getId().toString() + "-" + longToBase64(OffsetDateTime.now().toEpochSecond());
-        while(!tokenRepo.findByPublicPart(publicPart).isEmpty()) 
+        while(!tokenRepository.findByToken(publicPart).isEmpty())
             publicPart = profile.getId().toString() + "-" + longToBase64(OffsetDateTime.now().toEpochSecond());
         
         res.add(strToBase64(publicPart));
-        
-
-
-        String privatePart = longToBase64(secureRand.nextLong());
-        while(!tokenRepo.findByPrivatePart(privatePart).isEmpty()) 
-            privatePart = longToBase64(secureRand.nextLong());
-
-        res.add(privatePart);
 
         return res;
     }

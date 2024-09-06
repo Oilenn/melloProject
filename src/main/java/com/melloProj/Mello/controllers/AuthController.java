@@ -2,9 +2,9 @@ package com.melloProj.Mello.controllers;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.melloProj.Mello.models.MelloUser;
-import com.melloProj.Mello.services.ProfileService;
-import com.melloProj.Mello.services.TokenService;
+import com.melloProj.Mello.models.user.MelloUser;
+import com.melloProj.Mello.services.user.MelloUserService;
+import com.melloProj.Mello.services.user.TokenService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -12,14 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("auth")
-@RequestMapping("auth")
 public class AuthController {
-    private ProfileService profileService;
+    private MelloUserService melloUserService;
     private TokenService tokenService;
     
     @Autowired
-    public AuthController(ProfileService profileService, TokenService tokenService) {
-        this.profileService = profileService;
+    public AuthController(MelloUserService melloUserService, TokenService tokenService) {
+        this.melloUserService = melloUserService;
         this.tokenService = tokenService;
     }
 
@@ -27,7 +26,7 @@ public class AuthController {
     @CrossOrigin
     @PostMapping(path = "sign_up")
     public ResponseEntity<String> SignUp(@RequestParam("EMAIL") String email, @RequestParam("PASSWORD") String password){
-        MelloUser profile =  profileService.SignUp(email, password);
+        MelloUser profile =  melloUserService.SignUp(email, password);
 
         if(profile != null) {
             JSONObject res = new JSONObject();
@@ -48,13 +47,15 @@ public class AuthController {
     @CrossOrigin
     @PostMapping("sign_in")
     public ResponseEntity<String> SignIn(@RequestParam("EMAIL") String email, @RequestParam("PASSWORD") String password){
-        MelloUser profile =  profileService.SignIn(email, password);
+        MelloUser profile =  melloUserService.SignIn(email, password);
         
         if(profile != null) {
             JSONObject res = new JSONObject();
             try{
                 res.put("PROFILE", new ObjectMapper().writeValueAsString(profile));
                 res.put("TOKEN", new ObjectMapper().writeValueAsString(tokenService.tokenUtils.createToken(profile)));
+
+                System.out.println(tokenService.tokenUtils.createToken(profile));
             } catch(Exception e){
                 System.out.println(new Exception ("Error: couldn't create JSON for ", e));
             }
@@ -66,7 +67,7 @@ public class AuthController {
     @CrossOrigin
     @PostMapping("restore")
     public ResponseEntity<String> restore(@RequestParam("EMAIL") String email, @RequestParam("PASSWORD") String password){
-        var profile = profileService.restore(email, password);
+        var profile = melloUserService.restore(email, password);
         return SignIn(email, password);
     }
 
@@ -82,7 +83,7 @@ public class AuthController {
     public ResponseEntity<String> remove(@RequestParam("TOKEN") String token){
         MelloUser user = tokenService.getUserByToken(token);
         if(user != null){
-            profileService.delete(user);
+            melloUserService.delete(user);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();

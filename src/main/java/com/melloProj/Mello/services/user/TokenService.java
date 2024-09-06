@@ -1,8 +1,8 @@
-package com.melloProj.Mello.services;
+package com.melloProj.Mello.services.user;
 
 
 import com.melloProj.Mello.TokenUtils;
-import com.melloProj.Mello.models.MelloUser;
+import com.melloProj.Mello.models.user.MelloUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

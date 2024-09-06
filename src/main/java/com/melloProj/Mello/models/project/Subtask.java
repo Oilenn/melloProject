@@ -1,4 +1,4 @@
-package com.melloProj.Mello.models;
+package com.melloProj.Mello.models.project;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,8 +17,7 @@ public class Subtask implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer Id;
-    private Task task;
+    private Long task;
     private String name;
-    private String text;
-    private Date deadline;
+    private Boolean isCompleted;
 }

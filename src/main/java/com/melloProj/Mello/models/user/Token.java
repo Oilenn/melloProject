@@ -1,4 +1,4 @@
-package com.melloProj.Mello.models;
+package com.melloProj.Mello.models.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -15,11 +15,12 @@ public class Token {
     private Long id;
 
     @JsonIgnore
-    private Long profile;
+    private Long melloUser;
     @JsonIgnore
     private OffsetDateTime expTime;
 
-    private String publicPart;
-    private String privatePart;
+    private String token;
 
+//    private String publicPart;
+//    private String privatePart;
 }

@@ -1,8 +1,7 @@
-package com.melloProj.Mello.services;
+package com.melloProj.Mello.services.user;
 
-import com.melloProj.Mello.models.FileEntity;
-import com.melloProj.Mello.repositories.FileEntityRepo;
-import lombok.SneakyThrows;
+import com.melloProj.Mello.models.system.FileEntity;
+import com.melloProj.Mello.repositories.system.FileEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -13,14 +12,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.Random;
 
 @Service
 public class FileEntityService {
     @Autowired
-    private FileEntityRepo fileEntityRepo;
+    private FileEntityRepository fileEntityRepository;
     private final Path fileStorageLocation;
 
     @Autowired
@@ -41,7 +39,7 @@ public class FileEntityService {
         // Normalize file name
         Random randomNumber = new Random();
         String fileName = new Date().getTime() + (randomNumber.nextInt(900) + 100) + "-file";
-            while(fileEntityRepo.findFileEntityByFullName(fileName).size() != 0) fileName = new Date().getTime() + (randomNumber.nextInt(900) + 100) + "-file";
+            while(fileEntityRepository.findFileEntityByFullName(fileName).size() != 0) fileName = new Date().getTime() + (randomNumber.nextInt(900) + 100) + "-file";
 
         try {
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
@@ -59,15 +57,15 @@ public class FileEntityService {
         fileEntity.setOriginalName(oldFileName);
         fileEntity.setFullName(fullName);
         //file.setPath(path);
-        return fileEntityRepo.save(fileEntity);
+        return fileEntityRepository.save(fileEntity);
     }
     public FileEntity getFileEntityByFullName(String name){
-        var res = fileEntityRepo.findFileEntityByFullName(name);
+        var res = fileEntityRepository.findFileEntityByFullName(name);
         if(res.size() != 0) return res.get(0);
         return null;
     }
     public FileEntity getFileEntityByID(Long ID){
-        var res = fileEntityRepo.findById(ID);
+        var res = fileEntityRepository.findById(ID);
         return res.orElse(null);
     }
 }

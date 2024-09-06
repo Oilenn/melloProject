@@ -1,47 +1,80 @@
 package com.melloProj.Mello.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.melloProj.Mello.models.List;
-import com.melloProj.Mello.models.Project;
-import com.melloProj.Mello.models.Task;
-import com.melloProj.Mello.services.ListService;
-import com.melloProj.Mello.services.ProjectService;
-import com.melloProj.Mello.services.TaskService;
+import com.melloProj.Mello.models.project.Project;
+import com.melloProj.Mello.models.project.Task;
+import com.melloProj.Mello.models.system.ReferenceList;
+import com.melloProj.Mello.models.user.MelloUser;
+import com.melloProj.Mello.services.ReferenceListService;
+import com.melloProj.Mello.services.project.ListService;
+import com.melloProj.Mello.services.project.ProjectService;
+import com.melloProj.Mello.services.project.TaskService;
+import com.melloProj.Mello.services.user.MelloUserService;
+import com.melloProj.Mello.services.user.TokenService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 
 @RestController("projects")
 public class ProjectController {
     @Autowired
     ProjectService projectService;
-
     @Autowired
     TaskService taskService;
-
     @Autowired
     ListService listService;
 
-    @SneakyThrows
+    @Autowired
+    MelloUserService melloUserService;
+    @Autowired
+    ReferenceListService referenceListService;
+    @Autowired
+    TokenService tokenService;
+
+
     @CrossOrigin
     @GetMapping("project/{id}")
-    public ResponseEntity<String> getProject(@PathVariable Integer id) {
+    @Operation(summary = "Получить проект")
+    public ResponseEntity<String> getProject(@RequestParam("TOKEN") String token, @PathVariable Long id) throws JsonProcessingException {
+        MelloUser user = tokenService.getUserByToken(token);
+        if(user == null){
+            return ResponseEntity.badRequest().body("User is not authorizated");
+        }
+
+
+
         return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(projectService.getProject(id)));
     }
-    @SneakyThrows
     @CrossOrigin
     @PostMapping("project")
-    public ResponseEntity<String> postProject(@RequestBody Project project) {
-        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(projectService.createProject(project)));
+    @Operation(summary = "Создать проект")
+    public ResponseEntity<String> postProject(@RequestParam("TOKEN") String token, @RequestBody Project project) throws JsonProcessingException {
+        MelloUser user = tokenService.getUserByToken(token);
+        if(user == null){
+            return ResponseEntity.badRequest().body("Error: User is not found");
+        }
+
+
+        Project project1 = projectService.createProject(project);
+
+
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(project1));
     }
     @SneakyThrows
     @CrossOrigin
     @DeleteMapping("project")
-    public ResponseEntity<String> deleteProject(@RequestBody Project project) {
+    @Operation(summary = "Удалить проект")
+    public ResponseEntity<String> deleteProject(@RequestParam("TOKEN") String token, @RequestBody Project project) {
+        MelloUser user = tokenService.getUserByToken(token);
+        if(user == null){
+            return ResponseEntity.badRequest().body("Error: User is not found");
+        }
+        //TODO сделать проверку на права пользователя на проект
         return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(projectService.createProject(project)));
     }
 
@@ -49,13 +82,34 @@ public class ProjectController {
     @SneakyThrows
     @CrossOrigin
     @PostMapping("task/{listId}/{id}")
-    public ResponseEntity<String> getTask(@PathVariable Long taskId, @PathVariable Long listId){
-        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(taskService.getById(taskId)));
+    @Operation(summary = "Получить задачу")
+    public ResponseEntity<String> getTask(@RequestParam("TOKEN") String token,
+                                          @PathVariable Long taskId,
+                                          @PathVariable Long listId) {
+        MelloUser user = tokenService.getUserByToken(token);
+        if(user == null){
+            return ResponseEntity.badRequest().body("Error: User is not found");
+        }
+
+        Task task = taskService.getById(taskId);
+        if (task != null) {
+            return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(task));
+        }
+        return ResponseEntity.badRequest().body("Error: couldn't find content!");
     }
+
     @SneakyThrows
     @CrossOrigin
-    @PostMapping("task")
-    public ResponseEntity<String> postTask(@RequestBody Task task){
-        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(taskService.createTask(task)));
+    @PostMapping("task/{listId}/{id}")
+    @Operation(summary = "Получить проекты по пользователю")
+    public ResponseEntity<String> getProjectByUser(@RequestParam("TOKEN") String token) {
+        MelloUser user = tokenService.getUserByToken(token);
+        if(user == null){
+            return ResponseEntity.badRequest().body("Error: User is not found");
+        }
+
+        List<Project> projects = projectService.getProjectsByUser(user.getId());
+
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(projects));
     }
 }

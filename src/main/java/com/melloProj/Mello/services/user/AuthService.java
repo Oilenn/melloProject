@@ -1,4 +1,4 @@
-package com.melloProj.Mello.services;
+package com.melloProj.Mello.services.user;
 
 //@Service
 public class AuthService {

@@ -1,9 +1,7 @@
-package com.melloProj.Mello.repositories;
+package com.melloProj.Mello.repositories.system;
 
-import com.melloProj.Mello.models.MelloUser;
-import org.springframework.context.annotation.Profile;
+import com.melloProj.Mello.models.user.MelloUser;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
