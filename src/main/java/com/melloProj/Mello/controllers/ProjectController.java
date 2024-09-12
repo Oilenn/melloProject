@@ -118,4 +118,24 @@ public class ProjectController {
 
         return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(projects));
     }
+
+    @SneakyThrows
+    @CrossOrigin
+    @PostMapping("project/users/{id}")
+    @Operation(summary = "Получить пользователей по проекту")
+    public ResponseEntity<String> getUsersByProject(@RequestParam("TOKEN") String token,
+                                                    @PathVariable Long projectId) {
+        MelloUser user = tokenService.getUserByToken(token);
+        if(user == null){
+            return ResponseEntity.badRequest().body("Error: User is not found");
+        }
+
+        List<Project> projects = projectService.getProjectsByUser(user.getId());
+        if(projects == null){
+            return ResponseEntity.badRequest().body("Error: User doesn't have much rule");
+        }
+
+
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(projects));
+    }
 }

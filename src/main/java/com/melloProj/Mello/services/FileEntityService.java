@@ -1,7 +1,11 @@
-package com.melloProj.Mello.services.user;
+package com.melloProj.Mello.services;
 
 import com.melloProj.Mello.models.system.FileEntity;
 import com.melloProj.Mello.repositories.system.FileEntityRepository;
+import com.melloProj.Mello.utils.BufferedImageToMultipartFileConverter;
+import com.talanlabs.avatargenerator.Avatar;
+import com.talanlabs.avatargenerator.IdenticonAvatar;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -12,13 +16,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.Random;
 
 @Service
 public class FileEntityService {
     @Autowired
-    private FileEntityRepository fileEntityRepository;
+    private FileEntityRepository fileEntityRepo;
     private final Path fileStorageLocation;
 
     @Autowired
@@ -39,7 +44,7 @@ public class FileEntityService {
         // Normalize file name
         Random randomNumber = new Random();
         String fileName = new Date().getTime() + (randomNumber.nextInt(900) + 100) + "-file";
-            while(fileEntityRepository.findFileEntityByFullName(fileName).size() != 0) fileName = new Date().getTime() + (randomNumber.nextInt(900) + 100) + "-file";
+            while(fileEntityRepo.findFileEntityByFullName(fileName).size() != 0) fileName = new Date().getTime() + (randomNumber.nextInt(900) + 100) + "-file";
 
         try {
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
@@ -57,15 +62,24 @@ public class FileEntityService {
         fileEntity.setOriginalName(oldFileName);
         fileEntity.setFullName(fullName);
         //file.setPath(path);
-        return fileEntityRepository.save(fileEntity);
+        return fileEntityRepo.save(fileEntity);
     }
     public FileEntity getFileEntityByFullName(String name){
-        var res = fileEntityRepository.findFileEntityByFullName(name);
+        var res = fileEntityRepo.findFileEntityByFullName(name);
         if(res.size() != 0) return res.get(0);
         return null;
     }
     public FileEntity getFileEntityByID(Long ID){
-        var res = fileEntityRepository.findById(ID);
+        var res = fileEntityRepo.findById(ID);
         return res.orElse(null);
+    }
+    @SneakyThrows
+    public FileEntity makeRandomAvatar(){
+        Avatar avatar = IdenticonAvatar.newAvatarBuilder().build();
+        MultipartFile img = BufferedImageToMultipartFileConverter.convert(avatar.create(OffsetDateTime.now().toEpochSecond()), "png");
+        FileEntity res = storeFile(img);
+        res.setOriginalName("default.png");
+        res = fileEntityRepo.save(res);
+        return res;
     }
 }

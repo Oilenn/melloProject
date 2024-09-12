@@ -1,6 +1,7 @@
 package com.melloProj.Mello.services.project;
 
 import com.melloProj.Mello.models.project.Project;
+import com.melloProj.Mello.models.project.ProjectMember;
 import com.melloProj.Mello.repositories.project.ProjectRepository;
 import com.melloProj.Mello.repositories.project.UserProjectRepository;
 import com.melloProj.Mello.repositories.system.UserRepository;
@@ -41,5 +42,9 @@ public class ProjectService {
     public List<Project> getProjectsByUser(Long id){
         //TODO расписать многие-ко-многим и исправить проблему
         return projectRepository.findByMelloUsers(id);
+    }
+
+    public List<ProjectMember> getUsersByProject(Long projectId){
+        //TODO сделать репозиторий мемберов и получать их по проекту
     }
 }
