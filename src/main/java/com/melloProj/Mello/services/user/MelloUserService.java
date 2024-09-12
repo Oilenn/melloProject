@@ -3,6 +3,7 @@ package com.melloProj.Mello.services.user;
 
 import com.melloProj.Mello.models.user.MelloUser;
 import com.melloProj.Mello.repositories.system.UserRepository;
+import com.melloProj.Mello.services.FileEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

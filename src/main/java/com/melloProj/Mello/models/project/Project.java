@@ -20,7 +20,6 @@ public class Project implements Serializable {
     private Long id;
     private String name;
 
-    private Long melloUsers;
     private Long admin;
     private Date dateCreation;
     private String theme;

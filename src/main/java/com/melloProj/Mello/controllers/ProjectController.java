@@ -3,6 +3,7 @@ package com.melloProj.Mello.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.melloProj.Mello.models.project.Project;
+import com.melloProj.Mello.models.project.ProjectMember;
 import com.melloProj.Mello.models.project.Task;
 import com.melloProj.Mello.models.system.ReferenceList;
 import com.melloProj.Mello.models.user.MelloUser;
@@ -77,7 +78,7 @@ public class ProjectController {
         }
 
         if(!Objects.equals(project.getAdmin(), user.getId())){
-            return ResponseEntity.badRequest().body("Error: User doesn't have much rule");
+            return ResponseEntity.badRequest().body("Error: User doesn't have much rules");
         }
 
 
@@ -121,21 +122,53 @@ public class ProjectController {
 
     @SneakyThrows
     @CrossOrigin
-    @PostMapping("project/users/{id}")
+    @PostMapping("project/users/{projectId}")
     @Operation(summary = "Получить пользователей по проекту")
-    public ResponseEntity<String> getUsersByProject(@RequestParam("TOKEN") String token,
-                                                    @PathVariable Long projectId) {
+    public ResponseEntity<String> isUserInProject(@RequestParam("TOKEN") String token,
+                                                  @PathVariable Long projectId) {
         MelloUser user = tokenService.getUserByToken(token);
         if(user == null){
             return ResponseEntity.badRequest().body("Error: User is not found");
         }
 
-        List<Project> projects = projectService.getProjectsByUser(user.getId());
-        if(projects == null){
-            return ResponseEntity.badRequest().body("Error: User doesn't have much rule");
+        if(projectService.isUserInProject(user.getId(), projectId)){
+            return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(true));
         }
 
+        return ResponseEntity.badRequest().body("Error: User doesn't have much rules");
+    }
 
-        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(projects));
+    @SneakyThrows
+    @CrossOrigin
+    @PostMapping("project/users/{userId}/{projectId}")
+    @Operation(summary = "Добавить участника в проект")
+    public ResponseEntity<String> addUserInProject(@RequestParam("TOKEN") String token,
+                                                   @PathVariable Long userId,
+                                                   @PathVariable Long projectId) {
+        MelloUser user = tokenService.getUserByToken(token);
+        if(user == null){
+            return ResponseEntity.badRequest().body("Error: User is not found");
+        }
+
+        ProjectMember member = projectService.addMember(userId, projectId);
+
+        return ResponseEntity.badRequest().body("Error: User doesn't have much rules");
+    }
+
+    @SneakyThrows
+    @CrossOrigin
+    @PostMapping("project/users/{projectId}/{userId}")
+    @Operation(summary = "Изменить участника в проекте")
+    public ResponseEntity<String> updateUserInProject(@RequestParam("TOKEN") String token,
+                                                   @PathVariable Long userId,
+                                                   @PathVariable Long projectId) {
+        MelloUser user = tokenService.getUserByToken(token);
+        if(user == null){
+            return ResponseEntity.badRequest().body("Error: User is not found");
+        }
+
+        ProjectMember member = projectService.addMember(userId, projectId);
+
+        return ResponseEntity.badRequest().body("Error: User doesn't have much rules");
     }
 }

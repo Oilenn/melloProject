@@ -37,35 +37,35 @@ public class MainController {
 
     @PostMapping("/")
     public ResponseEntity<String> home(Model model) throws JsonProcessingException {
-        MelloUser user = new MelloUser();
-        user.setLogin("1");
-        user.setMail("ds");
-        user.setPassword("1");
-        user.setNickname("nick");
-        userRepository.save(user);
+//        MelloUser user = new MelloUser();
+//        user.setLogin("1");
+//        user.setMail("ds");
+//        user.setPassword("1");
+//        user.setNickname("nick");
+//        userRepository.save(user);
 
-        System.out.println(user.getId());
+//        System.out.println(user.getId());
+//
+//        Project project = new Project();
+//        project.setName("Проект");
+//        project.setDateCreation(new Date());
+//        project.setTheme("Закрытый");
+//        project.setAdmin(user.getId());
+//
+//        System.out.println(project.getId());
+//
+//        projectRepository.save(project);
+//
+//        List list = new List();
+//        list.setName("Задача");
+//        list.setListProjectCon(project.getId());
+//        listRepository.save(list);
+//
+//        Iterable<Project> projects = projectRepository.findAll(); // Получаем все проекты
+//        model.addAttribute("projects", projects); // Добавляем их в модель
+//
+//        System.out.println(project.getId());
 
-        Project project = new Project();
-        project.setName("Проект");
-        project.setDateCreation(new Date());
-        project.setTheme("Закрытый");
-        project.setMelloUsers(user.getId());
-
-        System.out.println(project.getId());
-
-        projectRepository.save(project);
-
-        List list = new List();
-        list.setName("Задача");
-        list.setListProjectCon(project.getId());
-        listRepository.save(list);
-
-        Iterable<Project> projects = projectRepository.findAll(); // Получаем все проекты
-        model.addAttribute("projects", projects); // Добавляем их в модель
-
-        System.out.println(project.getId());
-
-        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(project));
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(true));
     }
 }

@@ -17,10 +17,9 @@ public class ProjectMember implements Serializable {
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
-    private Long user;
-
-    private Long userProject;
+    private Long melloUser;
+    private Long project;
     private String role;
-    private Boolean isAdmin;
+    private UserRights rights;
 }
 
