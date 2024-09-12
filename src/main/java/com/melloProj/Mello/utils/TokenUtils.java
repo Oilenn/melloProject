@@ -1,4 +1,4 @@
-package com.melloProj.Mello;
+package com.melloProj.Mello.utils;
 
 
 import com.melloProj.Mello.models.user.MelloUser;

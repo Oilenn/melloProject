@@ -21,6 +21,7 @@ public class Project implements Serializable {
     private String name;
 
     private Long melloUsers;
+    private Long admin;
     private Date dateCreation;
     private String theme;
     private Boolean template;

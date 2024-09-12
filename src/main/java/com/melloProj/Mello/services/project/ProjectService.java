@@ -23,17 +23,19 @@ public class ProjectService {
         return projectRepository.findById(projectId).orElse(null);
     }
 
-    public Project createProject(Project project){
+    public Project createProject(Project project, Long creator){
         if (project == null) return null;
         return projectRepository.save(project);
     }
 
-    public void deleteProject(Long id){
+    public Project deleteProject(Long id){
         Project project = projectRepository.findById(id).orElse(null);;
 
         if(project != null){
             projectRepository.delete(project);
+            return project;
         }
+        return null;
     }
 
     public List<Project> getProjectsByUser(Long id){

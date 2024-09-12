@@ -42,8 +42,9 @@ public class ListService {
         return taskRepository.findByList(list.getId());
     }
 
-    public void updateTaskList(Long taskId, List newList) {
+    public void updateTaskList(Long taskId, Long newList) {
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new RuntimeException("Task not found"));
+        task.setList(newList);
         taskRepository.save(task);
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController("projects")
 public class ProjectController {
@@ -60,7 +61,7 @@ public class ProjectController {
         }
 
 
-        Project project1 = projectService.createProject(project);
+        Project project1 = projectService.createProject(project, user.getId());
 
 
         return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(project1));
@@ -74,8 +75,13 @@ public class ProjectController {
         if(user == null){
             return ResponseEntity.badRequest().body("Error: User is not found");
         }
-        //TODO сделать проверку на права пользователя на проект
-        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(projectService.createProject(project)));
+
+        if(!Objects.equals(project.getAdmin(), user.getId())){
+            return ResponseEntity.badRequest().body("Error: User doesn't have much rule");
+        }
+
+
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(projectService.deleteProject(project.getId())));
     }
 
 
@@ -100,7 +106,7 @@ public class ProjectController {
 
     @SneakyThrows
     @CrossOrigin
-    @PostMapping("task/{listId}/{id}")
+    @PostMapping("projects")
     @Operation(summary = "Получить проекты по пользователю")
     public ResponseEntity<String> getProjectByUser(@RequestParam("TOKEN") String token) {
         MelloUser user = tokenService.getUserByToken(token);
