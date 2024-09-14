@@ -20,16 +20,16 @@ public class ListService {
     }
 
     @SneakyThrows
-    public List getById(@PathVariable Long id){
+    public List<C> getById(@PathVariable Long id){
         return listRepository.findById(id).orElse(null);
     }
 
-    public List createList(List list) {
+    public List<C> createList(List<C> list) {
         return listRepository.save(list);
     }
 
-    public List deleteList(Long id) {
-        List list = listRepository.findById(id).orElse(null);;
+    public List<C> deleteList(Long id) {
+        List<C> list = listRepository.findById(id).orElse(null);;
 
         if(list != null){
             listRepository.delete(list);
@@ -38,7 +38,7 @@ public class ListService {
         return list;
     }
 
-    public java.util.List<Task> getTasksByList(List list) {
+    public java.util.List<Task> getTasksByList(List<C> list) {
         return taskRepository.findByList(list.getId());
     }
 

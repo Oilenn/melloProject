@@ -88,7 +88,7 @@ public class ProjectController {
 
     @SneakyThrows
     @CrossOrigin
-    @PostMapping("task/{listId}/{id}")
+    @GetMapping("task/{listId}/{id}")
     @Operation(summary = "Получить задачу")
     public ResponseEntity<String> getTask(@RequestParam("TOKEN") String token,
                                           @PathVariable Long taskId,
@@ -107,7 +107,7 @@ public class ProjectController {
 
     @SneakyThrows
     @CrossOrigin
-    @PostMapping("projects")
+    @GetMapping("projects")
     @Operation(summary = "Получить проекты по пользователю")
     public ResponseEntity<String> getProjectByUser(@RequestParam("TOKEN") String token) {
         MelloUser user = tokenService.getUserByToken(token);
@@ -122,7 +122,7 @@ public class ProjectController {
 
     @SneakyThrows
     @CrossOrigin
-    @PostMapping("project/users/{projectId}")
+    @GetMapping("project/users/{projectId}")
     @Operation(summary = "Получить пользователей по проекту")
     public ResponseEntity<String> isUserInProject(@RequestParam("TOKEN") String token,
                                                   @PathVariable Long projectId) {
@@ -157,7 +157,7 @@ public class ProjectController {
 
     @SneakyThrows
     @CrossOrigin
-    @PostMapping("project/users/{projectId}/{userId}")
+    @PutMapping("project/users/{projectId}/{userId}")
     @Operation(summary = "Изменить участника в проекте")
     public ResponseEntity<String> updateUserInProject(@RequestParam("TOKEN") String token,
                                                    @PathVariable Long userId,
