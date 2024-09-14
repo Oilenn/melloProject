@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.melloProj.Mello.models.project.Project;
 import com.melloProj.Mello.models.project.ProjectMember;
 import com.melloProj.Mello.models.project.Task;
-import com.melloProj.Mello.models.system.ReferenceList;
 import com.melloProj.Mello.models.user.MelloUser;
+import com.melloProj.Mello.repositories.project.ProjectMemberRepository;
 import com.melloProj.Mello.services.ReferenceListService;
 import com.melloProj.Mello.services.project.ListService;
 import com.melloProj.Mello.services.project.ProjectService;
@@ -35,6 +35,8 @@ public class ProjectController {
     MelloUserService melloUserService;
     @Autowired
     ReferenceListService referenceListService;
+    @Autowired
+    ProjectMemberRepository projectMemberRepository;
     @Autowired
     TokenService tokenService;
 
@@ -152,23 +154,33 @@ public class ProjectController {
 
         ProjectMember member = projectService.addMember(userId, projectId);
 
-        return ResponseEntity.badRequest().body("Error: User doesn't have much rules");
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(true));
     }
 
     @SneakyThrows
     @CrossOrigin
     @PutMapping("project/users/{projectId}/{userId}")
     @Operation(summary = "Изменить участника в проекте")
-    public ResponseEntity<String> updateUserInProject(@RequestParam("TOKEN") String token,
-                                                   @PathVariable Long userId,
-                                                   @PathVariable Long projectId) {
+    public ResponseEntity<String> updateMemberInProject(@RequestParam("TOKEN") String token,
+                                                        @RequestBody Long member,
+                                                        @PathVariable Long projectId) {
         MelloUser user = tokenService.getUserByToken(token);
         if(user == null){
             return ResponseEntity.badRequest().body("Error: User is not found");
         }
 
-        ProjectMember member = projectService.addMember(userId, projectId);
+        Project project = projectService.getProject(projectId);
 
-        return ResponseEntity.badRequest().body("Error: User doesn't have much rules");
+        if(!Objects.equals(project.getAdmin(), user.getId())){
+            return ResponseEntity.badRequest().body("Error: User doesn't have much rules");
+        }
+
+
+        ProjectMember projectMember = projectMemberRepository.findById(member).orElse(null);
+
+
+        projectMemberRepository.save(projectMember);
+
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(true));
     }
 }

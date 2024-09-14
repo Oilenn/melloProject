@@ -108,7 +108,7 @@ public class InProjectController {
     @PostMapping("list")
     @Operation(summary = "Создать список задач")
     public ResponseEntity<String> postList(@RequestParam("TOKEN") String token,
-                                           @RequestBody List<C> list){
+                                           @RequestBody List list){
         MelloUser user = tokenService.getUserByToken(token);
         if(user == null){
             return ResponseEntity.badRequest().body("Error: User is not found");
@@ -144,7 +144,7 @@ public class InProjectController {
 
         Commentary newCommentary = new Commentary();
         newCommentary.setDate(new Date());
-        newCommentary.setUser(user.getId());
+        newCommentary.setMelloUser(user.getId());
         newCommentary.setTask(taskId);
         newCommentary.setText(text);
 

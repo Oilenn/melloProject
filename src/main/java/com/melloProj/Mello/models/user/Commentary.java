@@ -19,7 +19,7 @@ public class Commentary implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private Long user;
+    private Long melloUser;
     private String text;
     private Date date;
     private Long task;
