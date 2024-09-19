@@ -30,15 +30,19 @@ public class MelloUserService {
         if(!isExist){
             MelloUser profile = new MelloUser();
 
+            int hashedPassword = password.hashCode();
+
             profile.setMail(email);
-            profile.setPassword(password);
+            profile.setPassword(hashedPassword);
 
             return userRepository.save(profile);
         }
         return null;
     }
     public MelloUser SignIn(String email, String password){
-        List<MelloUser> profiles = userRepository.findByMailAndPassword(email, password);
+        int hashedPassword = password.hashCode();
+
+        List<MelloUser> profiles = userRepository.findByMailAndPassword(email, hashedPassword);
         if(profiles.size() == 0)return null; // account not found
         MelloUser latestProfile = null;
         for(MelloUser profile : profiles) {
@@ -65,7 +69,9 @@ public class MelloUserService {
         delete(user.getMail());
     }
     public MelloUser restore(String email, String password) {
-        List<MelloUser> profiles = userRepository.findByMailAndPassword(email, password);
+        int hashedPassword = password.hashCode();
+
+        List<MelloUser> profiles = userRepository.findByMailAndPassword(email, hashedPassword);
         if(profiles.size() == 0) return null;
         for(MelloUser profile : profiles) if(profile.getIsDeleted()) {
             profile.setIsDeleted(false);

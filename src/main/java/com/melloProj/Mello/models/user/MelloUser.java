@@ -20,8 +20,7 @@ public class MelloUser implements Serializable {
     private Long id;
 
     private String nickname;
-    private String login;
-    private String password;
+    private Integer password;
     private String mail;
 
     private Boolean isDeleted = false;
