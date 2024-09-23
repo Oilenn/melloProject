@@ -1,6 +1,7 @@
 package com.melloProj.Mello.models.user;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class MelloUser implements Serializable {
     private Long id;
 
     private String nickname;
+    @JsonIgnore
     private Integer password;
     private String mail;
 

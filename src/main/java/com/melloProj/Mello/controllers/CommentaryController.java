@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.Objects;
 
 @RestController("commentary")
 public class CommentaryController {
@@ -66,6 +67,28 @@ public class CommentaryController {
         }
 
         return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(commentaryRepository.findById(commentaryId)));
+    }
+
+    @SneakyThrows
+    @CrossOrigin
+    @DeleteMapping("task/commentary/{commentaryId}")
+    @Operation(summary = "Получить комментарий")
+    public ResponseEntity<String> deleteCommentary(@RequestParam("TOKEN") String token,
+                                                @PathVariable Long commentaryId){
+        MelloUser user = tokenService.getUserByToken(token);
+        if(user == null){
+            return ResponseEntity.badRequest().body("Error: User is not found");
+        }
+        Commentary commentary = commentaryRepository.findById(commentaryId).orElse(null);
+        if(commentary == null){
+            return ResponseEntity.badRequest().body("Error: Commentary is not found");
+        }
+
+        if(Objects.equals(commentary.getMelloUser(), user.getId())){
+            return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(commentaryRepository.findById(commentaryId)));
+        }
+
+        return ResponseEntity.badRequest().body("Error: User is not an author of commentary");
     }
 
     @SneakyThrows
