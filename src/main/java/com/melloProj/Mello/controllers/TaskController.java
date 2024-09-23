@@ -86,7 +86,7 @@ public class TaskController {
             return ResponseEntity.badRequest().body("Error: User is not found");
         }
 
-        listService.updateTaskList(taskId, listId);
+        taskService.updateTaskList(taskId, listId);
         return ResponseEntity.ok().build();
     }
 

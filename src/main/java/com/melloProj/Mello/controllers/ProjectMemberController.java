@@ -41,7 +41,7 @@ public class ProjectMemberController {
     @CrossOrigin
     @GetMapping("project/users/{projectId}")
     @Operation(summary = "Получить пользователей по проекту")
-    public ResponseEntity<String> isUserInProject(@RequestParam("TOKEN") String token,
+    public ResponseEntity<String> getUsersByProject(@RequestParam("TOKEN") String token,
                                                   @PathVariable Long projectId) {
         MelloUser user = tokenService.getUserByToken(token);
         if(user == null){
@@ -49,7 +49,8 @@ public class ProjectMemberController {
         }
 
         if(projectService.isUserInProject(user.getId(), projectId)){
-            return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(true));
+            return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(
+                    projectService.getUsersByProject(user.getId())));
         }
 
         return ResponseEntity.badRequest().body("Error: User doesn't have much rules");
@@ -57,7 +58,7 @@ public class ProjectMemberController {
 
     @SneakyThrows
     @CrossOrigin
-    @PostMapping("project/users/{userId}/{projectId}")
+    @PostMapping("project/members/{userId}/{projectId}")
     @Operation(summary = "Добавить участника в проект")
     public ResponseEntity<String> addUserInProject(@RequestParam("TOKEN") String token,
                                                    @PathVariable Long userId,
@@ -74,28 +75,45 @@ public class ProjectMemberController {
 
     @SneakyThrows
     @CrossOrigin
-    @PutMapping("project/users/{projectId}/{userId}")
+    @PutMapping("project/members")
     @Operation(summary = "Изменить участника в проекте")
     public ResponseEntity<String> updateMemberInProject(@RequestParam("TOKEN") String token,
-                                                        @RequestBody Long member,
-                                                        @PathVariable Long projectId) {
+                                                        @RequestBody ProjectMember member) {
         MelloUser user = tokenService.getUserByToken(token);
         if(user == null){
             return ResponseEntity.badRequest().body("Error: User is not found");
         }
 
-        Project project = projectService.getProject(projectId);
+        Project project = projectService.getProject(member.getProject());
 
         if(!Objects.equals(project.getAdmin(), user.getId())){
             return ResponseEntity.badRequest().body("Error: User doesn't have much rules");
         }
 
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(projectService.updateMember(member)));
+    }
 
-        ProjectMember projectMember = projectMemberRepository.findById(member).orElse(null);
+    @SneakyThrows
+    @CrossOrigin
+    @DeleteMapping("project/members/{memberId}")
+    @Operation(summary = "Удалить участника из проекта")
+    public ResponseEntity<String> deleteProjectMember(@RequestParam("TOKEN") String token,
+                                                        @PathVariable Long memberId) {
+        MelloUser user = tokenService.getUserByToken(token);
+        if(user == null){
+            return ResponseEntity.badRequest().body("Error: User is not found");
+        }
 
+        ProjectMember projectMember = projectMemberRepository.findById(memberId).orElse(null);
 
-        projectMemberRepository.save(projectMember);
+        assert projectMember != null;
+        Project project = projectService.getProject(projectMember.getProject());
 
-        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(true));
+        if(!Objects.equals(project.getAdmin(), user.getId())){
+            return ResponseEntity.badRequest().body("Error: User doesn't have much rules");
+        }
+
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(
+                projectService.deleteProject(user.getId())));
     }
 }

@@ -21,4 +21,5 @@ public class Task implements Serializable {
     private String name;
     private String text;
     private Date deadline;
+    private Integer order;
 }

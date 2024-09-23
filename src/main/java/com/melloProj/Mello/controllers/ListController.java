@@ -59,6 +59,19 @@ public class ListController {
     }
     @SneakyThrows
     @CrossOrigin
+    @PutMapping("list/{listId}")
+    @Operation(summary = "Изменить список задач")
+    public ResponseEntity<String> updateList(@RequestParam("TOKEN") String token,
+                                          @RequestBody List list){
+        MelloUser user = tokenService.getUserByToken(token);
+        if(user == null){
+            return ResponseEntity.badRequest().body("Error: User is not found");
+        }
+
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(listService.updateList(list)));
+    }
+    @SneakyThrows
+    @CrossOrigin
     @DeleteMapping("list")
     @Operation(summary = "Удалить список задач")
     public ResponseEntity<String> deleteList(@RequestParam("TOKEN") String token,

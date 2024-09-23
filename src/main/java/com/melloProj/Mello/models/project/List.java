@@ -20,6 +20,5 @@ public class List implements Serializable {
     private Long listProjectCon;
     private String name;
 
-    private Long next;
-    private Long prev;
+    private Integer order;
 }

@@ -34,6 +34,9 @@ public class CommentaryController {
     @Autowired
     TokenService tokenService;
 
+    //Немного коряво - бизнес логику лучше перенести в сервис
+    //TODO: переместить всё в сервис
+
     @SneakyThrows
     @CrossOrigin
     @PostMapping("task/{taskId}/commentary/{text}")
@@ -57,6 +60,20 @@ public class CommentaryController {
 
     @SneakyThrows
     @CrossOrigin
+    @PutMapping("task")
+    @Operation(summary = "Обновить комментарий")
+    public ResponseEntity<String> updateCommentary(@RequestParam("TOKEN") String token,
+                                                   @RequestBody Commentary commentary){
+        MelloUser user = tokenService.getUserByToken(token);
+        if(user == null){
+            return ResponseEntity.badRequest().body("Error: User is not found");
+        }
+
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(commentaryRepository.save(commentary)));
+    }
+
+    @SneakyThrows
+    @CrossOrigin
     @GetMapping("task/commentary/{commentaryId}")
     @Operation(summary = "Получить комментарий")
     public ResponseEntity<String> getCommentary(@RequestParam("TOKEN") String token,
@@ -72,7 +89,7 @@ public class CommentaryController {
     @SneakyThrows
     @CrossOrigin
     @DeleteMapping("task/commentary/{commentaryId}")
-    @Operation(summary = "Получить комментарий")
+    @Operation(summary = "Удалить комментарий")
     public ResponseEntity<String> deleteCommentary(@RequestParam("TOKEN") String token,
                                                 @PathVariable Long commentaryId){
         MelloUser user = tokenService.getUserByToken(token);

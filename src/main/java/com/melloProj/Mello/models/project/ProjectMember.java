@@ -21,5 +21,6 @@ public class ProjectMember implements Serializable {
     private Long project;
     private String role;
     private UserRights rights;
+    private Integer order;
 }
 

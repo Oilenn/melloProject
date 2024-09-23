@@ -66,6 +66,16 @@ public class ProjectService {
         return projectMemberRepository.save(member);
     }
 
+    public ProjectMember deleteMember(Long memberId){
+        ProjectMember projectMember = projectMemberRepository.findById(memberId).orElse(null);
+
+        if(projectMember != null){
+            projectMemberRepository.delete(projectMember);
+            return projectMember;
+        }
+        return null;
+    }
+
     public List<Project> getProjectsByUser(Long id){
         //TODO расписать многие-ко-многим и исправить проблему
         MelloUser user = userRepository.findById(id).orElse(null);
@@ -84,7 +94,6 @@ public class ProjectService {
     }
 
     public List<ProjectMember> getUsersByProject(Long projectId){
-        //TODO сделать репозиторий мемберов и получать их по проекту
         return projectMemberRepository.findByProject(projectId);
     }
 

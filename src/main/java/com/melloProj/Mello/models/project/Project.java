@@ -25,4 +25,5 @@ public class Project implements Serializable {
     private String theme;
     private Boolean template;
     private Long image;
+    private Integer order;
 }
