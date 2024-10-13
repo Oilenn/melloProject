@@ -27,17 +27,19 @@ public class AuthController {
     @PostMapping(path = "sign_up")
     public ResponseEntity<String> SignUp(@RequestParam("EMAIL") String email, @RequestParam("PASSWORD") String password){
         MelloUser profile =  melloUserService.SignUp(email, password);
-
+        System.out.println(profile + "sign up");
         if(profile != null) {
             JSONObject res = new JSONObject();
             try{
                 res.put("PROFILE", new ObjectMapper().writeValueAsString(profile));
                 var token = tokenService.tokenUtils.createToken(profile);
-                res.put("TOKEN", new ObjectMapper().writeValueAsString(token));
+                res.put("TOKEN", new ObjectMapper().writeValueAsString(token.getTokenPart()));
+                System.out.println(token);
             } catch(Exception e){
                 System.out.println(new Exception ("Error: couldn't create JSON for ", e));
                 throw new Exception(e);
             }
+
             return ResponseEntity.ok().body(res.toString());
         }
         return ResponseEntity.badRequest().body("Error: valid profile found");
@@ -53,15 +55,17 @@ public class AuthController {
             JSONObject res = new JSONObject();
             try{
                 res.put("PROFILE", new ObjectMapper().writeValueAsString(profile));
-                res.put("TOKEN", new ObjectMapper().writeValueAsString(tokenService.tokenUtils.createToken(profile)));
+                res.put("TOKEN", new ObjectMapper().writeValueAsString(tokenService.tokenUtils.createToken(profile).getTokenPart()));
 
-                System.out.println(tokenService.tokenUtils.createToken(profile));
+                String token = tokenService.tokenUtils.createToken(profile).getTokenPart();
+
             } catch(Exception e){
                 System.out.println(new Exception ("Error: couldn't create JSON for ", e));
             }
-            
+
             return ResponseEntity.ok().body(res.toString());
         }
+
         return ResponseEntity.badRequest().body("Error: cannot get access to account");
     }
     @CrossOrigin

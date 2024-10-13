@@ -9,5 +9,5 @@ import java.util.List;
 public interface TokenRepository extends JpaRepository<Token, Long> {
     public List<Token> findByMelloUser(Long profile);
 
-    public List<Token> findByToken(String token);
+    public List<Token> findByTokenPart(String token);
 }

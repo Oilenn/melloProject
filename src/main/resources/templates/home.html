@@ -124,24 +124,42 @@
         <div>
             Недавно просмотреное
         </div>
-        <div class="project" th:each="project : ${projects}">
-            <p class="project-image" th:text="${project.name}"></p>
+        <div class="project">
+            <p class="project-image"></p>
         </div>
     </div>
 </div>
 <script>
-    document.querySelectorAll('#menu-column button').forEach(button => {
-    button.addEventListener('click', function(event) {
-        // Предотвращаем стандартное поведение отправки формы
-        event.preventDefault();
+    async function register(username, password) {
+    try {
+        const response = await fetch('sign_up', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `EMAIL=${encodeURIComponent(username)}&PASSWORD=${encodeURIComponent(password)}`
+        });
+        const data = await response.json();
+        const token = data.TOKEN;
+        console.log(data);
+        // Создаем URL для редиректа с параметром TOKEN
+        const redirectUrl = `home?TOKEN=${encodeURIComponent(token)}`;
+        console.log(token);
+        // Выполняем редирект
+        window.location.href = redirectUrl;
+    } catch (error) {
+        console.error('Ошибка при регистрации:', error);
+    }
+}
 
-        // Получаем текст кнопки и преобразуем его в нижний регистр и удаляем пробелы
-        const projectId = event.target.textContent.toLowerCase().replace(/\s+/g, '');
-
-        // Переходим по URL, соответствующему проекту
-        window.location.href = `/projects`;
-    });
+document.getElementById('registrationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const username = document.querySelector('#registrationForm input[name="username"]').value;
+    const password = document.querySelector('#registrationForm input[name="password"]').value;
+    console.log(username);
+    register(username, password);
 });
 </script>
+
 </body>
 </html>

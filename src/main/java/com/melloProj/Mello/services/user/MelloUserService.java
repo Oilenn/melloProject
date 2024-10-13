@@ -34,7 +34,7 @@ public class MelloUserService {
 
             profile.setMail(email);
             profile.setPassword(hashedPassword);
-
+            System.out.println(profile.getMail());
             return userRepository.save(profile);
         }
         return null;

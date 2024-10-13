@@ -38,22 +38,34 @@ public class TokenUtils {
         res.setMelloUser(user.getId());
 
         List<String> parts = generatePayload(user);
-        res.setToken(String.valueOf(parts));
-        System.out.println(res.getToken());
+        res
+                .setTokenPart(String.valueOf(parts));
+        System.out.println(res.getTokenPart());
         return tokenRepository.save(res);
     }
 
     public Boolean verifyToken(String tokenPart){
-        Token currToken = findToken(tokenPart);
-        System.out.println(tokenPart);
+        Token currToken = findToken(normilizeToken(tokenPart));
+//
+//        if(currToken.getExpTime().isBefore(OffsetDateTime.now())) {
+//            deleteToken(currToken);
+//            return false;
+//        }
+//
+//        extendTokenLifetime(currToken);
+        return true;
+    }
 
-        if(currToken.getExpTime().isBefore(OffsetDateTime.now())) {
-            deleteToken(currToken);
-            return false;
+    public String normilizeToken(String tokenPart){
+        char[] arrayToken = tokenPart.toCharArray();
+
+        String newToken = "";
+        for (int i = 1; i < arrayToken.length - 1; i++) {
+
+            newToken += arrayToken[i];
         }
 
-        extendTokenLifetime(currToken);
-        return true;
+        return newToken;
     }
 
     public MelloUser getProfileByToken(Token token){
@@ -67,9 +79,11 @@ public class TokenUtils {
     }
 
     public Token findToken(String tokenPart){
-        List<Token> currToken = tokenRepository.findByToken(tokenPart);
-        if(currToken.isEmpty()) return null;
-        return currToken.get(0);
+        System.out.println(tokenPart + "Token Part");
+        for(var d: tokenRepository.findAll()){
+            System.out.println(d.getTokenPart());
+        }
+        return tokenRepository.findByTokenPart(tokenPart).getFirst();
     }
 
     public void deleteToken(Token token){
@@ -81,7 +95,7 @@ public class TokenUtils {
         List<String> res = new ArrayList<>();
 
         String publicPart = profile.getId().toString() + "-" + longToBase64(OffsetDateTime.now().toEpochSecond());
-        while(!tokenRepository.findByToken(publicPart).isEmpty())
+        while(!tokenRepository.findByTokenPart(publicPart).isEmpty())
             publicPart = profile.getId().toString() + "-" + longToBase64(OffsetDateTime.now().toEpochSecond());
         
         res.add(strToBase64(publicPart));

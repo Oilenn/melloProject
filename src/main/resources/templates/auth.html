@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}"></title>
+    <style>
+        body {
+           font-family: Arial, sans-serif;
+           margin: 0;
+           padding: 0;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           height: 100vh;
+        }
+
+        header {
+           position: fixed;
+           top: 0;
+           width: 100%;
+           background-color: #66b3ff;
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           padding: 0 20px;
+        }
+
+        #logo {
+           font-size: 3em;
+           color: #fff;
+        }
+
+        #nav {
+           font-size: 1.5em;
+           color: #fff;
+        }
+
+        #content {
+           margin-top: 80px;
+           display: flex;
+           justify-content: space-around;
+           align-items: center;
+           height: calc(100vh - 80px);
+        }
+
+        #login-column {
+            width: 40%;
+            font-size: 1.5em;
+            line-height: 1.5em;
+            border-left: 2px solid #000;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-right: 10%;
+        }
+
+        #login-column h2 {
+            margin-bottom: 20px;
+        }
+
+        #login-column form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #login-column input {
+            width: 100%;
+            height: 50px;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        #login-column button {
+            width: 100%;
+            height: 50px;
+            font-size: 1.5em;
+            background-color: #AFFFFA;
+            border-width: 0;
+        }
+
+        #activity-wrapper{
+            width: 60%;
+        }
+
+        #activity-column {
+           margin-left: 20%;
+           font-size: 1.5em;
+           line-height: 1.5em;
+           border-left: 2px solid #000;
+        }
+
+        #activity-column p {
+           background-color: #AFFFFA;
+           width: 70%;
+           margin-bottom: 5%;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <span id="logo">Mello</span>
+    <nav id="nav">
+        <!-- Здесь можно добавить ссылки на другие страницы -->
+    </nav>
+</header>
+
+<div id="content">
+    <div id="login-column">
+        <h2>Авторизация</h2>
+        <form method="post">
+            <input type="text" name="username" placeholder="Имя пользователя" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+    </div>
+</div>
+</body>
+<script>
+    function saveToken(){
+
+    }
+
+    function redirectToHome(){
+
+    }
+    document.getElementById('signup-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+
+        fetch('/sign_up', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            redirect('/home');
+            // Например, показать сообщение об успехе или перенаправить на другую страницу
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            // Обработка ошибок
+        });
+    });
+
+</script>
+</html>

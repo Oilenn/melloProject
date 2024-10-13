@@ -14,12 +14,11 @@ public class Token {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @JsonIgnore
     private Long melloUser;
     @JsonIgnore
     private OffsetDateTime expTime;
 
-    private String token;
+    private String tokenPart;
 
 //    private String publicPart;
 //    private String privatePart;
