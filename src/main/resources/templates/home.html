@@ -44,7 +44,6 @@
         }
 
         #menu-column {
-            width: 20%;
             font-size: 1.5em;
             line-height: 1.5em;
             border-left: 2px solid #000;
@@ -107,59 +106,66 @@
 </header>
 <div id="content">
     <div id="menu-column">
-        <button>Проекты</button>
-        <button>Шаблоны</button>
-        <button>Архив</button>
-        <button>Избранное</button>
-    </div>
-    <div>
-        <div id="activity-column">
-            <h1 style="margin-left: 25%; font-size: 1.5em;">Активность</h1>
-            <p>Плюсвалеты пользователей 123 в простей проекты поставляй закуды "Культы ком" в "Выполненные"</p>
-            <p>Пользователи пользователь 123 в простей проекты поставляй задуды "Культы ком" в "Выполненные"</p>
-            <p>Пользователи пользователь 123 в простей проекты поставляй задуду "Культы ком" в "Выполненные"</p>
-        </div>
+        <button id="btn-projects">Проекты</button>
+        <button id="btn-templates">Шаблоны</button>
+        <button id="btn-archive">Архив</button>
+        <button id="btn-favorites">Избранное</button>
     </div>
     <div id="projects">
         <div>
-            Недавно просмотреное
+            <h2>Недавно просмотренное</h2>
         </div>
         <div class="project">
-            <p class="project-image"></p>
+            <p class="project-image">Проект 1</p>
         </div>
     </div>
 </div>
+
 <script>
-    async function register(username, password) {
-    try {
-        const response = await fetch('sign_up', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `EMAIL=${encodeURIComponent(username)}&PASSWORD=${encodeURIComponent(password)}`
-        });
-        const data = await response.json();
-        const token = data.TOKEN;
-        console.log(data);
-        // Создаем URL для редиректа с параметром TOKEN
-        const redirectUrl = `home?TOKEN=${encodeURIComponent(token)}`;
-        console.log(token);
-        // Выполняем редирект
-        window.location.href = redirectUrl;
-    } catch (error) {
-        console.error('Ошибка при регистрации:', error);
+    // Функция для загрузки проектов через API
+    async function loadProjects() {
+        const token = JSON.parse(localStorage.getItem('token'));  // Замените на реальный токен
+
+        try {
+
+            var decodedToken = decodeURIComponent(token).replace(/^\[|\]$/g, '');
+            // Выполняем запрос к API
+                var response = fetch('/projects?TOKEN=' + decodedToken, {
+                method: 'GET'
+            })
+
+            if (!response.ok) {
+                throw new Error('Ошибка при загрузке проектов');
+            }
+
+            // Парсим данные из ответа
+            const projects = await response.json();
+
+            // Находим контейнер для проектов
+            const projectsContainer = document.getElementById('projects');
+
+            // Очищаем содержимое контейнера
+            projectsContainer.innerHTML = '<h2>Список проектов</h2>';
+
+            // Проходим по каждому проекту и добавляем его на страницу
+            projects.forEach(project => {
+                const projectElement = document.createElement('div');
+                projectElement.classList.add('project');
+                projectElement.innerHTML = `
+                    <p><strong>${project.name}</strong></p>
+                    <p>${project.description}</p>
+                `;
+                projectsContainer.appendChild(projectElement);
+            });
+
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('Произошла ошибка при загрузке проектов');
+        }
     }
-}
 
-document.getElementById('registrationForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const username = document.querySelector('#registrationForm input[name="username"]').value;
-    const password = document.querySelector('#registrationForm input[name="password"]').value;
-    console.log(username);
-    register(username, password);
-});
+    // Добавляем обработчик клика для кнопки "Проекты"
+    document.getElementById('btn-projects').addEventListener('click', loadProjects);
 </script>
-
 </body>
 </html>

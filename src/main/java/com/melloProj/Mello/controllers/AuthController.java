@@ -25,8 +25,10 @@ public class AuthController {
     @SneakyThrows
     @CrossOrigin
     @PostMapping(path = "sign_up")
-    public ResponseEntity<String> SignUp(@RequestParam("EMAIL") String email, @RequestParam("PASSWORD") String password){
-        MelloUser profile =  melloUserService.SignUp(email, password);
+    public ResponseEntity<String> SignUp(@RequestParam("USERNAME") String username,
+                                         @RequestParam("EMAIL") String email,
+                                         @RequestParam("PASSWORD") String password){
+        MelloUser profile =  melloUserService.SignUp(username,email, password);
         System.out.println(profile + "sign up");
         if(profile != null) {
             JSONObject res = new JSONObject();
@@ -48,7 +50,8 @@ public class AuthController {
     @SneakyThrows
     @CrossOrigin
     @PostMapping("sign_in")
-    public ResponseEntity<String> SignIn(@RequestParam("EMAIL") String email, @RequestParam("PASSWORD") String password){
+    public ResponseEntity<String> SignIn(@RequestParam("EMAIL") String email,
+                                         @RequestParam("PASSWORD") String password){
         MelloUser profile =  melloUserService.SignIn(email, password);
         
         if(profile != null) {
@@ -70,7 +73,8 @@ public class AuthController {
     }
     @CrossOrigin
     @PostMapping("restore")
-    public ResponseEntity<String> restore(@RequestParam("EMAIL") String email, @RequestParam("PASSWORD") String password){
+    public ResponseEntity<String> restore(@RequestParam("EMAIL") String email,
+                                          @RequestParam("PASSWORD") String password){
         var profile = melloUserService.restore(email, password);
         return SignIn(email, password);
     }
@@ -96,6 +100,8 @@ public class AuthController {
     @CrossOrigin
     @GetMapping("profile")
     public ResponseEntity<String> getProfileByToken(@RequestParam("TOKEN") String token){
+        System.out.println(token + "Token front");
+
         MelloUser user = tokenService.getUserByToken(token);
         if(user != null){
             return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(user));

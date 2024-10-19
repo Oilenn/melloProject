@@ -19,7 +19,4 @@ public class Token {
     private OffsetDateTime expTime;
 
     private String tokenPart;
-
-//    private String publicPart;
-//    private String privatePart;
 }

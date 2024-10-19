@@ -17,7 +17,7 @@ public class MelloUserService {
     @Autowired
     private FileEntityService fileEntityService;
 
-    public MelloUser SignUp(String email, String password) {
+    public MelloUser SignUp(String username, String email, String password) {
         List<MelloUser> users = userRepository.findByMail(email);
         Boolean isExist = false;
         for (MelloUser user:
@@ -32,8 +32,10 @@ public class MelloUserService {
 
             int hashedPassword = password.hashCode();
 
+            profile.setNickname(username);
             profile.setMail(email);
             profile.setPassword(hashedPassword);
+
             System.out.println(profile.getMail());
             return userRepository.save(profile);
         }

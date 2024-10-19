@@ -20,5 +20,5 @@ public class Subtask implements Serializable {
     private Long task;
     private String name;
     private Boolean isCompleted;
-    private Integer order;
+    private Integer orderIn;
 }

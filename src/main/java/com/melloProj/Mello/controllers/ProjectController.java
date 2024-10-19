@@ -92,6 +92,7 @@ public class ProjectController {
     @GetMapping("projects")
     @Operation(summary = "Получить проекты по пользователю")
     public ResponseEntity<String> getProjectByUser(@RequestParam("TOKEN") String token) {
+        System.out.println(token);
         MelloUser user = tokenService.getUserByToken(token);
         if(user == null){
             return ResponseEntity.badRequest().body("Error: User is not found");

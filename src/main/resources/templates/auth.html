@@ -65,6 +65,11 @@
             flex-direction: column;
         }
 
+        #redirect button{
+            display: flex;
+            flex-direction: column;
+        }
+
         #login-column input {
             width: 100%;
             height: 50px;
@@ -105,49 +110,49 @@
 <header>
     <span id="logo">Mello</span>
     <nav id="nav">
-        <!-- Здесь можно добавить ссылки на другие страницы -->
+        /
     </nav>
 </header>
 
 <div id="content">
     <div id="login-column">
         <h2>Авторизация</h2>
-        <form method="post">
+        <form id="signup-form" method="post">
             <input type="text" name="username" placeholder="Имя пользователя" required>
             <input type="password" name="password" placeholder="Пароль" required>
-            <button type="submit">Зарегистрироваться</button>
+            <button type="submit">Войти</button>
         </form>
+        <div id="redirect">
+            <h4>Еще нет аккаунта?</h4>
+            <button id="redirect-to-reg">Зарегистрироваться</button>
+        </div>
     </div>
 </div>
 </body>
 <script>
-    function saveToken(){
-
-    }
-
-    function redirectToHome(){
-
-    }
+    document.getElementById('redirect-to-reg').addEventListener('submit', function(event) {
+         window.location.href = '/register';
+    });
     document.getElementById('signup-form').addEventListener('submit', function(event) {
         event.preventDefault();
 
-        const formData = new FormData(this);
-
         fetch('/sign_up', {
             method: 'POST',
-            body: formData,
+            body: `USERNAME=${encodeURIComponent(username)}EMAIL=${encodeURIComponent(mail)}&PASSWORD=${encodeURIComponent(password)}`
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-            redirect('/home');
-            // Например, показать сообщение об успехе или перенаправить на другую страницу
+            var token = data.TOKEN;
+            localStorage.setItem('token', token);
+            window.location.href = redirectUrl;
         })
         .catch(error => {
             console.error('Ошибка:', error);
-            // Обработка ошибок
         });
     });
 
+    if(localStorage.getItem('token')){
+        window.location.href = '/redirect_page';
+    }
 </script>
 </html>

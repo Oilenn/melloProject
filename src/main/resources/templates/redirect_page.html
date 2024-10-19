@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    const token = localStorage.getItem('token');
+    if (token) {
+        const redirectUrl = `home?TOKEN=${encodeURIComponent(JSON.parse(token))}`;
+        window.location.href = redirectUrl;
+    } else {
+        console.log("Error: token not found");
+        window.location.href = '/';
+    }
+</script>
+</body>
+</html>

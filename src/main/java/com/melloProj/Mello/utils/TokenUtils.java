@@ -15,6 +15,7 @@ import java.security.SecureRandom;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class TokenUtils {
@@ -45,15 +46,9 @@ public class TokenUtils {
     }
 
     public Boolean verifyToken(String tokenPart){
-        Token currToken = findToken(normilizeToken(tokenPart));
-//
-//        if(currToken.getExpTime().isBefore(OffsetDateTime.now())) {
-//            deleteToken(currToken);
-//            return false;
-//        }
-//
-//        extendTokenLifetime(currToken);
-        return true;
+        Token currToken = findToken(tokenPart);
+
+        return currToken!=null;
     }
 
     public String normilizeToken(String tokenPart){
@@ -81,9 +76,10 @@ public class TokenUtils {
     public Token findToken(String tokenPart){
         System.out.println(tokenPart + "Token Part");
         for(var d: tokenRepository.findAll()){
-            System.out.println(d.getTokenPart());
+            System.out.println(d.getTokenPart() + "One of token");
         }
-        return tokenRepository.findByTokenPart(tokenPart).getFirst();
+        Token token = tokenRepository.findByTokenPart(tokenPart).orElse(null);
+        return token;
     }
 
     public void deleteToken(Token token){
